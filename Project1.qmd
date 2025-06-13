@@ -6,15 +6,64 @@ format: html
 
 Setup Chunk
 
-```{r, echo=F}
-
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
 ```
 
 # Data Processing
 
-## Question 1 
+## Question 1: Reading in Data 
+
+```{r}
+EDU01 = read_csv("EDU01a.csv", show_col_types = F) %>%
+  select(Area_name, STCOU, ends_with("D")) %>%
+  rename(area_name = Area_name)
+
+head(EDU01, 5)
+```
+
+## Question 2: Pivot Data
+
+```{r}
+EDU01_long = EDU01 %>%
+  pivot_longer(
+    cols = ends_with("D"), 
+    names_to = "surveyID", 
+    values_to = "enrollment"
+  )
+
+head(EDU01_long, 5)
+```
+## Question 3: Extracting the year
 
 ```{r}
 
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
