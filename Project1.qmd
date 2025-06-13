@@ -1,0 +1,20 @@
+---
+title: "Project 1"
+author: Keshav Ramesh & Calista Harris
+format: html
+---
+
+Setup Chunk
+
+```{r, echo=F}
+
+```
+
+# Data Processing
+
+## Question 1 
+
+```{r}
+
+```
+
