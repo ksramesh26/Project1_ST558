@@ -37,7 +37,7 @@ head(EDU01_long, 5)
 ## Question 3: Extracting the year
 
 ```{r}
-EDU01_long_parsed = EDU01_long %>%
+EDU01_long_updated = EDU01_long %>%
   mutate(
     surveyID_year = substr(surveyID_full, 8, 9)
     ) %>%
@@ -51,8 +51,28 @@ EDU01_long_parsed = EDU01_long %>%
   
   
 
-head(EDU01_long_parsed, 5)
+head(EDU01_long_updated, 5)
   
+```
+
+## Question 4: Identifying County Data
+
+```{r}
+county_locations = grep(pattern = ", \\w\\w", EDU01_long_updated$area_name)
+
+EDU01_long_updated_county = EDU01_long_updated[county_locations, ]
+
+class(EDU01_long_updated_county) <- c("County", class(EDU01_long_updated_county))
+
+EDU01_long_updated_non_county = EDU01_long_updated[-county_locations, ]
+
+class(EDU01_long_updated_non_county) <- c("State", class(EDU01_long_updated_non_county))
+
+
+head(EDU01_long_updated_county, 10)
+head(EDU01_long_updated_non_county, 10)
+
+
 ```
 
 
