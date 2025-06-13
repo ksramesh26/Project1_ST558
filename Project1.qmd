@@ -28,7 +28,7 @@ head(EDU01, 5)
 EDU01_long = EDU01 %>%
   pivot_longer(
     cols = ends_with("D"), 
-    names_to = "surveyID", 
+    names_to = "surveyID_full", 
     values_to = "enrollment"
   )
 
@@ -37,10 +37,23 @@ head(EDU01_long, 5)
 ## Question 3: Extracting the year
 
 ```{r}
+EDU01_long_parsed = EDU01_long %>%
+  mutate(
+    surveyID_year = substr(surveyID_full, 8, 9)
+    ) %>%
+  mutate(
+    year = as.numeric(paste0("19", surveyID_year))
+  ) %>%
+  mutate(
+    surveyID = substr(surveyID_full, 1, 7)
+  ) %>%
+  select(-surveyID_year)
+  
+  
 
+head(EDU01_long_parsed, 5)
+  
 ```
-
-
 
 
 
