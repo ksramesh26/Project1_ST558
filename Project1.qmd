@@ -136,6 +136,7 @@ state_tibble |>
 # Requirements: Repeating Process with 2nd Component of Data Set
 
 ## Create a Function for Steps 1 and 2
+
 ```{r}
 #read in the data set
 edu01b <- read_csv("EDU01b.csv", show_col_types = FALSE)
@@ -165,6 +166,7 @@ edu_long |>
 ```
 
 ## Create a Function for Taking Output of Step 2 and Step 3
+
 ```{r}
 extract_year_id <- function(data) {
   data |> 
@@ -184,8 +186,30 @@ long_updated |>
   slice(1:5)
 ```
 
+## Create a Function for Step 5
+```{r}
+#only to be used for the county tibble
+extract_state <- function(county_tbl){
+   county_tbl |> 
+    mutate(
+      state = substr(area_name, nchar(area_name) - 1, nchar(area_name))
+  )
+}
 
+#test the function to see if it works correctly 
 
+#first repeat steps 4 to get county_tibble
+county_indices <- grep(pattern = ", \\w\\w", long_updated$area_name)
+county_tibble <- long_updated[county_indices, ]
+class(county_tibble) <- c("county", class(county_tibble))
+
+#use the function 
+county_tibble <- extract_state(county_tibble) 
+
+#display the first 5 rows
+county_tibble |> 
+  slice(1:5)
+```
 
 
 
