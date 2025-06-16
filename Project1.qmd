@@ -85,7 +85,18 @@ head(county_tibble, 10)
 head(state_tibble, 10)
 ```
 
+## Question 5: Add `state` Variable to the County Tibble
+```{r}
+county_tibble <- county_tibble |> 
+  mutate(
+    #use nchar to get the last 2 characters of area_name
+    state = substr(area_name, nchar(area_name) - 1, nchar(area_name))
+  )
 
+#display the first 5 rows
+county_tibble |> 
+  slice(1:5)
+```
 
 
 
