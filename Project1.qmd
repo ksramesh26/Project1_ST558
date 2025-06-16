@@ -187,6 +187,7 @@ long_updated |>
 ```
 
 ## Create a Function for Step 5
+
 ```{r}
 #only to be used for the county tibble
 extract_state <- function(county_tbl){
@@ -208,6 +209,52 @@ county_tibble <- extract_state(county_tibble)
 
 #display the first 5 rows
 county_tibble |> 
+  slice(1:5)
+```
+
+## Create a Function for Step 6
+
+```{r}
+#only to be used for the non-county (state) tibble
+assign_division <- function(state_tbl){
+  state_tbl |> 
+    mutate(
+    state = substr(area_name, nchar(area_name) - 1, nchar(area_name)),
+    division = case_when(
+      state %in% c("CT", "ME", "MA", "NH", "RI", "VT") ~ "New England",
+      state %in% c("NJ", "NY", "PA") ~ "Mid-Atlantic",
+      
+      state %in% c("IL", "IN", "MI", "OH", "WI") ~ "East North Central",
+      state %in% c("IA", "KS", "MN", "MO", "NE", 
+                   "ND", "SD") ~ "West North Central",
+      
+      state %in% c("DE", "DC", "FL", "GA", "MD", "NC", 
+                   "SC", "VA", "WV") ~ "South Atlantic",
+      state %in% c("AL", "KY", "MS", "TN") ~ "East South Central",
+      state %in% c("AR", "LA", "OK", "TX") ~ "West South Central",
+      
+      state %in% c("AZ", "CO", "ID", "MT", "NV", 
+                   "NM", "UT", "WY") ~ "Mountain",
+      state %in% c("AK", "CA", "HI", "OR", "WA") ~ "Pacific",
+      
+      TRUE ~ "ERROR"  
+    )
+  ) |> 
+  select(-state)
+}
+
+#test the function to see if it works correctly 
+
+#first repeat steps 4 to get state_tibble
+county_indices <- grep(pattern = ", \\w\\w", long_updated$area_name)
+state_tibble <- long_updated[-county_indices, ]
+class(state_tibble) <- c("state", class(state_tibble))
+
+#use the function 
+state_tibble <- assign_division(state_tibble) 
+
+#display the first 5 rows
+state_tibble |> 
   slice(1:5)
 ```
 
