@@ -42,37 +42,40 @@ edu_long = edu01a %>%
 #display the first 5 rows
 head(edu_long, 5)
 ```
+
 ## Question 3: Extracting the year
 
 ```{r}
-EDU01_long_updated = edu_long %>%
+long_updated = edu_long %>%
   mutate(
+    #extract the 2-digit year from the 8th and 9th characters of surveyID_full 
     surveyID_year = substr(surveyID_full, 8, 9)
     ) %>%
   mutate(
+    #convert the 2-digit year into a 4-digit year (assuming all are 1900s)
     year = as.numeric(paste0("19", surveyID_year))
   ) %>%
   mutate(
+    #extract the survey ID (first 7 characters of surveyID_full)
     surveyID = substr(surveyID_full, 1, 7)
   ) %>%
+  #remove the temporary intermediate column
   select(-surveyID_year)
-  
-  
 
-head(EDU01_long_updated, 5)
-  
+#display the first 5 rows
+head(long_updated, 5)
 ```
 
 ## Question 4: Identifying County Data
 
 ```{r}
-county_locations = grep(pattern = ", \\w\\w", EDU01_long_updated$area_name)
+county_locations = grep(pattern = ", \\w\\w", long_updated$area_name)
 
-EDU01_long_updated_county = EDU01_long_updated[county_locations, ]
+EDU01_long_updated_county = long_updated[county_locations, ]
 
 class(EDU01_long_updated_county) <- c("County", class(EDU01_long_updated_county))
 
-EDU01_long_updated_non_county = EDU01_long_updated[-county_locations, ]
+EDU01_long_updated_non_county = long_updated[-county_locations, ]
 
 class(EDU01_long_updated_non_county) <- c("State", class(EDU01_long_updated_non_county))
 
