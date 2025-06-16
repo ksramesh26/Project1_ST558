@@ -32,7 +32,7 @@ edu01a |>
 ## Question 2: Pivot Data
 
 ```{r}
-edu_long = edu01a %>%
+edu_long <- edu01a %>%
   pivot_longer(
     cols = ends_with("D"), 
     names_to = "surveyID_full", #store original column names (ex. "EST1234D")
@@ -46,7 +46,7 @@ head(edu_long, 5)
 ## Question 3: Extracting the year
 
 ```{r}
-long_updated = edu_long %>%
+long_updated <- edu_long %>%
   mutate(
     #extract the 2-digit year from the 8th and 9th characters of surveyID_full 
     surveyID_year = substr(surveyID_full, 8, 9)
@@ -70,20 +70,21 @@ head(long_updated, 5)
 
 ```{r}
 #identify county rows: ", XX" (where XX is a two-letter state abbreviation)
-county_indices = grep(pattern = ", \\w\\w", long_updated$area_name)
+county_indices <- grep(pattern = ", \\w\\w", long_updated$area_name)
 
 #create county tibble and assign custom classes
-county_tibble = long_updated[county_indices, ]
+county_tibble <- long_updated[county_indices, ]
 class(county_tibble) <- c("county", class(county_tibble))
 
 #create non-county tibble and assign custom classes
-state_tibble = long_updated[-county_indices, ]
+state_tibble <- long_updated[-county_indices, ]
 class(state_tibble) <- c("state", class(state_tibble))
 
 #display the first 10 rows for both data sets
 head(county_tibble, 10)
 head(state_tibble, 10)
 ```
+
 
 
 
