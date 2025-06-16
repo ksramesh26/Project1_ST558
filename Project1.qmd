@@ -3,6 +3,8 @@ title: "Project 1"
 author: Keshav Ramesh & Calista Harris
 format: pdf
 editor: visual
+editor_options: 
+  chunk_output_type: console
 ---
 
 Load require packages
@@ -15,17 +17,22 @@ library(tidyverse)
 ## Question 1: Reading in Data 
 
 ```{r}
-EDU01 = read_csv("EDU01a.csv", show_col_types = F) %>%
-  select(Area_name, STCOU, ends_with("D")) %>%
-  rename(area_name = Area_name)
+edu01a <- read_csv("EDU01a.csv", show_col_types = FALSE) |>
+  select(
+    area_name = Area_name, #rename Area_name
+    STCOU,
+    ends_with("D") #select all columns ending in "D"
+  )
 
-head(EDU01, 5)
+#display the first 5 rows
+edu01a |> 
+  slice(1:5)
 ```
 
 ## Question 2: Pivot Data
 
 ```{r}
-EDU01_long = EDU01 %>%
+EDU01_long = edu01a %>%
   pivot_longer(
     cols = ends_with("D"), 
     names_to = "surveyID_full", 
