@@ -86,6 +86,7 @@ head(state_tibble, 10)
 ```
 
 ## Question 5: Add `state` Variable to the County Tibble
+
 ```{r}
 county_tibble <- county_tibble |> 
   mutate(
@@ -99,6 +100,7 @@ county_tibble |>
 ```
 
 ## Question 6: Add `division` Variable to the Non-county Tibble
+
 ```{r}
 state_tibble <- state_tibble %>%
   mutate(
@@ -131,9 +133,36 @@ state_tibble |>
   slice(1:5)
 ```
 
+# Requirements: Repeating Process with 2nd Component of Data Set
 
+## Create a Function for Steps 1 and 2
+```{r}
+#read in the data set
+edu01b <- read_csv("EDU01b.csv", show_col_types = FALSE)
 
+select_pivot <- function(data, column = "enrollment") {
+  data |> 
+    #step 1
+    select(
+      area_name = Area_name,
+      STCOU,
+      ends_with("D")
+    ) |> 
+    #step 2
+    pivot_longer(
+      cols = ends_with("D"),
+      names_to = "surveyID_full",
+      values_to = column
+    )
+}
 
+#test the function to see if it works correctly 
+edu_long <- select_pivot(edu01b) 
+
+#display the first 5 rows
+edu_long |> 
+  slice(1:5)
+```
 
 
 
