@@ -1,11 +1,11 @@
 ---
 title: "Project 1"
 author: Keshav Ramesh & Calista Harris
-format: html
+format: pdf
+editor: visual
 ---
 
-Setup Chunk
-
+Load require packages
 ```{r, message=FALSE, warning=FALSE}
 library(tidyverse)
 ```
