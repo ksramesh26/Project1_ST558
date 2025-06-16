@@ -69,21 +69,20 @@ head(long_updated, 5)
 ## Question 4: Identifying County Data
 
 ```{r}
-county_locations = grep(pattern = ", \\w\\w", long_updated$area_name)
+#identify county rows: ", XX" (where XX is a two-letter state abbreviation)
+county_indices = grep(pattern = ", \\w\\w", long_updated$area_name)
 
-EDU01_long_updated_county = long_updated[county_locations, ]
+#create county tibble and assign custom classes
+county_tibble = long_updated[county_indices, ]
+class(county_tibble) <- c("county", class(county_tibble))
 
-class(EDU01_long_updated_county) <- c("County", class(EDU01_long_updated_county))
+#create non-county tibble and assign custom classes
+state_tibble = long_updated[-county_indices, ]
+class(state_tibble) <- c("state", class(state_tibble))
 
-EDU01_long_updated_non_county = long_updated[-county_locations, ]
-
-class(EDU01_long_updated_non_county) <- c("State", class(EDU01_long_updated_non_county))
-
-
-head(EDU01_long_updated_county, 10)
-head(EDU01_long_updated_non_county, 10)
-
-
+#display the first 10 rows for both data sets
+head(county_tibble, 10)
+head(state_tibble, 10)
 ```
 
 
