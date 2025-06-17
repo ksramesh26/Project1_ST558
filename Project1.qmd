@@ -314,7 +314,7 @@ edu01b$state |>
   slice(1:5)
 ```
 
-<<<<<<< HEAD
+
 ## Creating a Wrapper
 
 ```{r}
@@ -360,29 +360,6 @@ head(edu01a_b_join)
 ```
 
 
-## Writing a Generic Function for Summarizing
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 =======
 # Call It and Combine Your Data 
 
@@ -403,7 +380,9 @@ combine_data <- function(data1, data2){
 #test and display using the combine function
 combine_data(edu01a, edu01b)
 ```
->>>>>>> 6b82ded8da03969fd3a542e3f5fb841e752b893b
+
+
+## Writing a Generic Function for Summarizing
 
 
 
