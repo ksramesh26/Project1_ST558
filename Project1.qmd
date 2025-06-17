@@ -314,6 +314,7 @@ edu01b$state |>
   slice(1:5)
 ```
 
+<<<<<<< HEAD
 ## Creating a Wrapper
 
 ```{r}
@@ -382,6 +383,27 @@ head(edu01a_b_join)
 
 
 
+=======
+# Call It and Combine Your Data 
+
+```{r}
+edu01a <- my_wrapper("https://www4.stat.ncsu.edu/~online/datasets/EDU01a.csv")
+edu01b <- my_wrapper("https://www4.stat.ncsu.edu/~online/datasets/EDU01b.csv")
+
+combine_data <- function(data1, data2){
+  combined_county <- bind_rows(data1$county, data2$county)
+  combined_state <- bind_rows(data1$state, data2$state)
+  
+  return(list(
+    county = combined_county,
+    state = combined_state
+  ))
+}
+
+#test and display using the combine function
+combine_data(edu01a, edu01b)
+```
+>>>>>>> 6b82ded8da03969fd3a542e3f5fb841e752b893b
 
 
 
