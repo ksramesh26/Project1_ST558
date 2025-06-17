@@ -3,18 +3,17 @@ title: "Project 1"
 author: Keshav Ramesh & Calista Harris
 format: pdf
 editor: visual
-editor_options: 
-  chunk_output_type: console
 ---
 
 Load require packages
+
 ```{r, message=FALSE, warning=FALSE}
 library(tidyverse)
 ```
 
 # Data Processing
 
-## Question 1: Reading in Data 
+## Question 1: Reading in Data
 
 ```{r}
 edu01a <- read_csv("EDU01a.csv", show_col_types = FALSE) |>
@@ -43,7 +42,7 @@ edu_long <- edu01a %>%
 head(edu_long, 5)
 ```
 
-## Question 3: Extracting the year 
+## Question 3: Extracting the year
 
 ```{r}
 long_updated <- edu_long %>%
@@ -312,7 +311,6 @@ edu01b$state |>
   slice(1:5)
 ```
 
-
 ## Creating a Wrapper
 
 ```{r}
@@ -357,9 +355,7 @@ head(edu01a_b_join)
 
 ```
 
-
-=======
-# Call It and Combine Your Data 
+======= \# Call It and Combine Your Data
 
 ```{r}
 edu01a <- my_wrapper("https://www4.stat.ncsu.edu/~online/datasets/EDU01a.csv")
@@ -379,18 +375,14 @@ combine_data <- function(data1, data2){
 combine_data(edu01a, edu01b)
 ```
 
-
 ## Writing a Generic Function for Summarizing
 
+```{r}
+plot.state <- function(data, column = "enrollment"){
+  data |> 
+    filter()
+}
 
 
 
-
-
-
-
-
-
-
-
-
+```
