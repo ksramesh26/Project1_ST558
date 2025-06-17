@@ -49,13 +49,11 @@ head(edu_long, 5)
 long_updated <- edu_long %>%
   mutate(
     #extract the 2-digit year from the 8th and 9th characters of surveyID_full 
-    surveyID_year = substr(surveyID_full, 8, 9)
-    ) %>%
-  mutate(
+    surveyID_year = substr(surveyID_full, 8, 9),
+    
     #convert the 2-digit year into a 4-digit year (assuming all are 1900s)
-    year = as.numeric(paste0("19", surveyID_year))
-  ) %>%
-  mutate(
+    year = as.numeric(paste0("19", surveyID_year)),
+    
     #extract the survey ID (first 7 characters of surveyID_full)
     surveyID = substr(surveyID_full, 1, 7)
   ) %>%
