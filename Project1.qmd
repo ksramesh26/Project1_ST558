@@ -258,6 +258,40 @@ state_tibble |>
   slice(1:5)
 ```
 
+## Create a Function Returning Two Final Tibbles
+
+```{r}
+identify_locations <- function(data) {
+  #step 4
+  county_indices <- grep(pattern = ", \\w\\w", long_updated$area_name)
+
+  county_tibble <- long_updated[county_indices, ]
+  class(county_tibble) <- c("county", class(county_tibble))
+  
+  state_tibble <- long_updated[-county_indices, ]
+  class(state_tibble) <- c("state", class(state_tibble))
+  
+  #step 5 using the functions create
+  county_tibble <- extract_state(county_tibble)
+  state_tibble  <- assign_division(state_tibble)
+  
+  #return both tibbles as a list
+  return(list(county = county_tibble, state = state_tibble))
+}
+
+#test the function to see if it works correctly 
+
+#applied the functions created above first
+read_edu <- select_pivot(edu01b)
+long_updated <- extract_year_id(read_edu)
+edu01b_split <- identify_locations(long_updated)
+
+#display the individual outputs
+edu01b_split$county |> 
+  slice(1:5)
+edu01b_split$state |> 
+  slice(1:5)
+```
 
 
 
