@@ -312,6 +312,76 @@ edu01b$state |>
   slice(1:5)
 ```
 
+<<<<<<< HEAD
+## Creating a Wrapper
+
+```{r}
+parse_data_wrapper <- function(data, column = "enrollment"){
+  result = select_pivot(data, column) |> #function 1 and 2
+    extract_year_id() |> # function 3
+    identify_locations() #function 4,5,6
+  return(result)
+}
+
+## test the function
+result = parse_data_wrapper(edu01a)
+county_testa = result$county
+state_testa = result$state
+
+
+head(county_testa)
+head(state_testa)
+```
+
+## Call and Combining the Data
+
+```{r}
+#calling the wrapper for A
+edu01a_parsed = parse_data_wrapper("https://www4.stat.ncsu.edu/~online/datasets/EDU01a.csv")
+#Calling the wrapper for B
+edu01b_parsed = parse_data_wrapper("https://www4.stat.ncsu.edu/~online/datasets/EDU01b.csv")
+
+#combine the results of the wrapper function
+parse_data_wrapper_combined = function(resulta, resultb) {
+  county_join = dplyr::bind_rows(resulta$county, resultb$county)
+  state_join = dplyr::bind_rows(resulta$state, resultb$state)
+  
+  return(list(county = county_join, state = state_join))
+}
+
+#joining wrapper results from a and b
+edu01a_b_join = parse_data_wrapper_combined(edu01a_parsed, edu01b_parsed)
+
+# testing to see if function works
+head(edu01a_b_join)
+
+```
+
+
+## Writing a Generic Function for Summarizing
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=======
 # Call It and Combine Your Data 
 
 ```{r}
@@ -331,6 +401,7 @@ combine_data <- function(data1, data2){
 #test and display using the combine function
 combine_data(edu01a, edu01b)
 ```
+>>>>>>> 6b82ded8da03969fd3a542e3f5fb841e752b893b
 
 
 
