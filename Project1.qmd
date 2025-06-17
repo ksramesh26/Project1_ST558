@@ -293,6 +293,26 @@ edu01b_split$state |>
   slice(1:5)
 ```
 
+## Create All Into One Function Call
+
+```{r}
+my_wrapper <- function(url, default_var_name = "enrollment") {
+  result <- read_csv(url, show_col_types = FALSE) |> 
+    select_pivot(column =  default_var_name) |> 
+    extract_year_id() |> 
+    identify_locations()
+  return(result)
+}
+
+#test the wrapper function 
+edu01b <- my_wrapper("https://www4.stat.ncsu.edu/~online/datasets/EDU01b.csv") 
+
+#check the display of outputs
+edu01b$county |> 
+  slice(1:5)
+edu01b$state |> 
+  slice(1:5)
+```
 
 
 
