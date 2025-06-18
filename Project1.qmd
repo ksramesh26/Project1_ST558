@@ -276,14 +276,15 @@ combine_data(edu01a_parsed, edu01b_parsed)
 ```{r}
 plot.state <- function(data1, column = "enrollment"){
   data1 |> 
-    filter(division != "ERROR") |>
-    group_by(division, year) |>
-    summarise(mean_value = mean(get(column), na.rm = T)) |>
+    filter(division != "ERROR") |> # remove any row with error 
+    group_by(division, year) |> # group data 
+    summarise(mean_value = mean(get(column), na.rm = T)) |> # summarize data to get means 
+    # plot data
     ggplot(aes(
       x = year, 
       y = mean_value,
       color = division
-    )) + 
+    )) + # add aesthetic markers
     geom_line(linewidth = 1) + #connect dots with a line
     geom_point() +
     labs(
@@ -306,12 +307,12 @@ plot.county <- function(data,
                         state = "NC", direction = "top",
                         n = 5){
   state_data = data |>
-    filter({{state}} == state)
+    filter({{state}} == state)  ## filter data for specified state
   
-  data1 = state_data |> 
+  data1 = state_data |> ## group by area name (county)
     group_by(area_name) |>
-    summarise(mean_value = mean(get(column), na.rm = T))
-  
+    summarise(mean_value = mean(get(column), na.rm = T))# calculate column mean
+  # sort counties based on direction
    if (direction == "top") {
     data1 <- data1 |>
       arrange(desc(mean_value))
@@ -319,18 +320,18 @@ plot.county <- function(data,
     data1 <- data1 |> 
       arrange(mean_value)
   }
-  
+  # get names of top/bottom N countries 
   areas <- data1 %>%
     slice_head(n = n) %>%
     pull(area_name)
-  
+  # Plot data
   data_plotted = state_data |>
     filter(area_name %in% areas) |>
     ggplot(aes(
       x = year, 
       y = get(column),
       color = area_name
-    )) +
+    )) + # add aestetic arguments 
     geom_line(linewidth = 1) + 
     geom_point() +
     labs(
