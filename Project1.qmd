@@ -368,7 +368,35 @@ plot(edu_combined$county,
      state = "PA", direction = "top", n = 8)
 ``` 
 
+## The 5 PST01 Data Sets
 
+```{r}
+#run wrapper function for each data set
+pst01a <- my_wrapper("https://www4.stat.ncsu.edu/~online/datasets/PST01a.csv")
+pst01b <- my_wrapper("https://www4.stat.ncsu.edu/~online/datasets/PST01b.csv")
+pst01c <- my_wrapper("https://www4.stat.ncsu.edu/~online/datasets/PST01c.csv")
+pst01d <- my_wrapper("https://www4.stat.ncsu.edu/~online/datasets/PST01d.csv")
+
+#combine the 4 data sets
+#first, combine a and b
+pst_combined_ab <- combine_data(pst01a, pst01b)
+#second, combine c and d
+pst_combined_cd <- combine_data(pst01c, pst01d)
+#finally, combine ab with cd
+pst_combined <- combine_data(pst_combined_ab, pst_combined_cd)
+
+#plot for state data frame 
+plot(pst_combined$state, column = "enrollment")
+
+#plot for county data frame with the 4 different calls 
+plot(pst_combined$county, 
+     state = "CA", direction = "top", n = 15)
+plot(pst_combined$county, 
+     state = "TX", direction = "top", n = 4)
+plot(pst_combined$county)  
+plot(pst_combined$county, 
+     state = "NY", direction = "top", n = 10)
+```
 
 
 
