@@ -306,10 +306,12 @@ plot.county <- function(data,
                         state = "NC", direction = "top",
                         n = 5){
   state_data = data |>
-    filter(data$state == state)
+    filter({{state}} == state)
+  
   data1 = state_data |> 
     group_by(area_name) |>
     summarise(mean_value = mean(get(column), na.rm = T))
+  
    if (direction == "top") {
     data1 <- data1 |>
       arrange(desc(mean_value))
@@ -317,9 +319,11 @@ plot.county <- function(data,
     data1 <- data1 |> 
       arrange(mean_value)
   }
+  
   areas <- data1 %>%
     slice_head(n = n) %>%
     pull(area_name)
+  
   data_plotted = state_data |>
     filter(area_name %in% areas) |>
     ggplot(aes(
@@ -340,6 +344,9 @@ plot.county <- function(data,
     theme(legend.position = "bottom")
   return(data_plotted)
 }
+
+
+plot(edu01a_parsed$county)
 ```
 
 \newpage
