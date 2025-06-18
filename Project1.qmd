@@ -47,13 +47,13 @@ head(edu_long, 5)
 ```{r}
 long_updated = edu_long |> 
     mutate(
-      #extract the 2-digit year from the 8th and 9th characters of surveyID_full
+      #get 2-digit year from the 8th and 9th characters of surveyID_full
       surveyID_year = substr(surveyID_full, 8, 9),
       
       #convert the 2-digit year into numeric
       year = as.numeric(surveyID_year),
-      # if 2 year digit is greater than 80 add 1900 + year, else 2000 + year
-      year = ifelse(year >= 80, 1900 + year, 2000 +year),
+      #if 2 year digit is greater than 80 add 1900 + year, else 2000 + year
+      year = ifelse(year >= 80, 1900 + year, 2000 + year),
       surveyID = substr(surveyID_full, 1, 7)
     ) |> 
   select(-surveyID_year)
@@ -162,7 +162,7 @@ extract_year_id <- function(data) {
     mutate(
       surveyID_year = substr(surveyID_full, 8, 9),
       year = as.numeric(surveyID_year),
-      year = ifelse(year >= 90, 1900 + year, 2000 +year),
+      year = ifelse(year >= 90, 1900 + year, 2000 + year),
       surveyID = substr(surveyID_full, 1, 7)
     ) |> 
   select(-surveyID_year)
@@ -251,8 +251,8 @@ my_wrapper <- function(url, column = "enrollment") {
 
 ```{r}
 #call wrapper twice for the 2 data sets 
-edu01a_parsed <- my_wrapper("https://www4.stat.ncsu.edu/~online/datasets/EDU01a.csv")
-edu01b_parsed <- my_wrapper("https://www4.stat.ncsu.edu/~online/datasets/EDU01b.csv")
+edu01a <- my_wrapper("https://www4.stat.ncsu.edu/~online/datasets/EDU01a.csv")
+edu01b <- my_wrapper("https://www4.stat.ncsu.edu/~online/datasets/EDU01b.csv")
 
 combine_data <- function(data1, data2){
   combined_county <- bind_rows(data1$county, data2$county)
@@ -265,7 +265,7 @@ combine_data <- function(data1, data2){
 }
 
 #test and display using the combine function
-combine_data(edu01a_parsed, edu01b_parsed)
+combine_data(edu01a, edu01b)
 ```
 
 \newpage
@@ -276,15 +276,15 @@ combine_data(edu01a_parsed, edu01b_parsed)
 ```{r}
 plot.state <- function(data1, column = "enrollment"){
   data1 |> 
-    filter(division != "ERROR") |> # remove any row with error 
-    group_by(division, year) |> # group data 
-    summarise(mean_value = mean(get(column), na.rm = T)) |> # summarize data to get means 
-    # plot data
+    filter(division != "ERROR") |> #remove any row with error 
+    group_by(division, year) |> #group data 
+    summarise(mean_value = mean(get(column), na.rm = T)) |> #get means 
+    #plot data
     ggplot(aes(
       x = year, 
       y = mean_value,
       color = division
-    )) + # add aesthetic markers
+    )) + #add aesthetic markers
     geom_line(linewidth = 1) + #connect dots with a line
     geom_point() +
     labs(
@@ -294,8 +294,7 @@ plot.state <- function(data1, column = "enrollment"){
       color = "Division"
     ) +
     guides(color = guide_legend(ncol = 2)) + 
-    theme_minimal() +
-    theme(legend.position = "bottom")
+    theme_minimal() 
 }
 ```
 
@@ -307,12 +306,12 @@ plot.county <- function(data,
                         state = "NC", direction = "top",
                         n = 5){
   state_data = data |>
-    filter({{state}} == state)  ## filter data for specified state
+    filter({{state}} == state)  #filter data for specified state
   
-  data1 = state_data |> ## group by area name (county)
+  data1 = state_data |> #group by area name (county)
     group_by(area_name) |>
-    summarise(mean_value = mean(get(column), na.rm = T))# calculate column mean
-  # sort counties based on direction
+    summarise(mean_value = mean(get(column), na.rm = T)) #calculate column mean
+  #sort counties based on direction
    if (direction == "top") {
     data1 <- data1 |>
       arrange(desc(mean_value))
@@ -320,11 +319,11 @@ plot.county <- function(data,
     data1 <- data1 |> 
       arrange(mean_value)
   }
-  # get names of top/bottom N countries 
+  #get names of top/bottom N countries 
   areas <- data1 %>%
     slice_head(n = n) %>%
     pull(area_name)
-  # Plot data
+  #plot data
   data_plotted = state_data |>
     filter(area_name %in% areas) |>
     ggplot(aes(
@@ -341,13 +340,9 @@ plot.county <- function(data,
       color = "County" 
     ) +
     guides(color = guide_legend(ncol = 2)) + 
-    theme_minimal() +
-    theme(legend.position = "bottom")
+    theme_minimal() 
   return(data_plotted)
 }
-
-
-plot(edu01a_parsed$county)
 ```
 
 \newpage
