@@ -336,10 +336,27 @@ combine_data(edu01a, edu01b)
 # Writing a Generic Function for Summarizing
 
 ```{r}
-plot.state <- function(data, column = "enrollment"){
-  data |> 
-    filter()
+plot.state <- function(data1, column = "enrollment"){
+  data1 |> 
+    filter(division != "Error") |>
+    group_by(division, year) |>
+    summarise(mean_value = mean(get(column), na.rm = T)) |>
+    ggplot(aes(
+      x = year, 
+      y = mean_value,
+      color = division
+    )) +
+    geom_point() +
+    labs(
+      title = paste0("Mean Enrollment by Division and Year"),
+      x = "Year",
+      y = paste0("Mean", column),
+      color = "Division"
+    )
+    
 }
+
+plot.state(edu01a$state)
 
 
 
