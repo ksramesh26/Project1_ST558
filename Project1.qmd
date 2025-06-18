@@ -365,6 +365,7 @@ plot.state <- function(data1, column = "enrollment"){
 
 
 ```{r, echo=FALSE}
+## Testing
 plot.state(edu01a_parsed$state)
 ```
 
@@ -416,8 +417,8 @@ plot.county <- function(data,
     
 }
 
-
-plot(edu01a_parsed$county)
+## Testing 
+plot(edu01a_parsed$county, state = "AL", n = 20)
 
 ```
 
