@@ -371,10 +371,13 @@ plot.state(edu01a_parsed$state)
 ## plot.county
 
 ```{r}
-plot.county <- function(data, column = "enrollment", state = "NC", direction = "top", n = 5){
+plot.county <- function(data, 
+                        column = "enrollment", 
+                        state = "NC", direction = "top",
+                        n = 5){
   
   state_data = data |>
-    filter(state == state)
+    filter(data$state == state)
   
   data1 = state_data |> 
     group_by(area_name) |>
@@ -403,11 +406,13 @@ plot.county <- function(data, column = "enrollment", state = "NC", direction = "
     )) +
     geom_point() +
     labs(
-      title = paste((direction), n, "counties in", state),
+      title = paste(toupper(direction), n, "counties in", state),
       x = "Year",
       y = column,
       color = "County"
     )
+  
+  return(data_plotted)
     
 }
 
