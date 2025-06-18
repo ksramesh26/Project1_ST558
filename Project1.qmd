@@ -58,8 +58,6 @@ long_updated = edu_long |>
     ) |> 
   select(-surveyID_year)
 
-
-
 #display the first 5 rows
 head(long_updated, 5)
 ```
@@ -154,13 +152,6 @@ select_pivot <- function(data, column = "enrollment") {
       values_to = column
     )
 }
-
-#test the function to see if it works correctly 
-edu_long <- select_pivot(edu01b) 
-
-#display the first 5 rows
-edu_long |> 
-  slice(1:5)
 ```
 
 ## Create a Function for Taking Output of Step 2 and Step 3
@@ -176,13 +167,6 @@ extract_year_id <- function(data) {
     ) |> 
   select(-surveyID_year)
 }
-
-#test the function to see if it works correctly 
-long_updated <- extract_year_id(edu_long) 
-
-#display the first 5 rows
-long_updated |> 
-  slice(1:5)
 ```
 
 ## Create a Function for Step 5
@@ -195,20 +179,6 @@ extract_state <- function(county_tbl){
       state = substr(area_name, nchar(area_name) - 1, nchar(area_name))
   )
 }
-
-#test the function to see if it works correctly 
-
-#first repeat steps 4 to get county_tibble
-county_indices <- grep(pattern = ", \\w\\w", long_updated$area_name)
-county_tibble <- long_updated[county_indices, ]
-class(county_tibble) <- c("county", class(county_tibble))
-
-#use the function 
-county_tibble <- extract_state(county_tibble) 
-
-#display the first 5 rows
-county_tibble |> 
-  slice(1:5)
 ```
 
 ## Create a Function for Step 6
@@ -241,20 +211,6 @@ assign_division <- function(state_tbl){
   ) |> 
   select(-state)
 }
-
-#test the function to see if it works correctly 
-
-#first repeat steps 4 to get state_tibble
-county_indices <- grep(pattern = ", \\w\\w", long_updated$area_name)
-state_tibble <- long_updated[-county_indices, ]
-class(state_tibble) <- c("state", class(state_tibble))
-
-#use the function 
-state_tibble <- assign_division(state_tibble) 
-
-#display the first 5 rows
-state_tibble |> 
-  slice(1:5)
 ```
 
 ## Create a Function Returning Two Final Tibbles
@@ -277,19 +233,6 @@ identify_locations <- function(data) {
   #return both tibbles as a list
   return(list(county = county_tibble, state = state_tibble))
 }
-
-#test the function to see if it works correctly 
-
-#applied the functions created above first
-read_edu <- select_pivot(edu01b)
-long_updated <- extract_year_id(read_edu)
-edu01b_split <- identify_locations(long_updated)
-
-#display the individual outputs
-edu01b_split$county |> 
-  slice(1:5)
-edu01b_split$state |> 
-  slice(1:5)
 ```
 
 ## Create All Into One Function Call - Wrapper Function
@@ -297,20 +240,11 @@ edu01b_split$state |>
 ```{r}
 my_wrapper <- function(url, column = "enrollment") {
   result <- read_csv(url, show_col_types = FALSE) |> 
-    select_pivot(url, column) |> 
+    select_pivot() |> 
     extract_year_id() |> 
     identify_locations()
   return(result)
 }
-
-#test the wrapper function 
-edu01b <- my_wrapper("https://www4.stat.ncsu.edu/~online/datasets/EDU01b.csv") 
-
-#check the display of outputs
-edu01b$county |> 
-  slice(1:5)
-edu01b$state |> 
-  slice(1:5)
 ```
 
 ## Call It and Combine Your Data
@@ -337,7 +271,7 @@ combine_data(edu01a_parsed, edu01b_parsed)
 \newpage
 # Writing a Generic Function for Summarizing
 
-## plot.state function
+## Custom Plot for State Level Data
 
 ```{r}
 plot.state <- function(data1, column = "enrollment"){
@@ -350,41 +284,29 @@ plot.state <- function(data1, column = "enrollment"){
       y = mean_value,
       color = division
     )) +
+    geom_line(linewidth = 1) + #connect dots with a line
     geom_point() +
     labs(
       title = paste0("Mean Enrollment by Division and Year"),
       x = "Year",
-      y = paste0("Mean", column),
+      y = paste0("Mean ", column),
       color = "Division"
     )
-    
 }
-
-
 ```
 
-
-```{r, echo=FALSE}
-## Testing
-plot.state(edu01a_parsed$state)
-```
-
-## plot.county
+## Custom Plot for County Level Data
 
 ```{r}
 plot.county <- function(data, 
                         column = "enrollment", 
                         state = "NC", direction = "top",
                         n = 5){
-  
   state_data = data |>
     filter(data$state == state)
-  
   data1 = state_data |> 
     group_by(area_name) |>
     summarise(mean_value = mean(get(column), na.rm = T))
-  
-  
    if (direction == "top") {
     data1 <- data1 |>
       arrange(desc(mean_value))
@@ -392,12 +314,9 @@ plot.county <- function(data,
     data1 <- data1 |> 
       arrange(mean_value)
   }
-  
-  
   areas <- data1 %>%
     slice_head(n = n) %>%
     pull(area_name)
-  
   data_plotted = state_data |>
     filter(area_name %in% areas) |>
     ggplot(aes(
@@ -412,13 +331,7 @@ plot.county <- function(data,
       y = column,
       color = "County"
     )
-  
   return(data_plotted)
-    
 }
-
-## Testing 
-plot(edu01a_parsed$county, state = "AL", n = 20)
-
 ```
 
