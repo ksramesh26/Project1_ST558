@@ -45,19 +45,20 @@ head(edu_long, 5)
 ## Question 3: Extracting the year
 
 ```{r}
-long_updated <- edu_long %>%
-  mutate(
-    #extract the 2-digit year from the 8th and 9th characters of surveyID_full 
-    surveyID_year = substr(surveyID_full, 8, 9),
-    
-    #convert the 2-digit year into a 4-digit year (assuming all are 1900s)
-    year = as.numeric(paste0("19", surveyID_year)),
-    
-    #extract the survey ID (first 7 characters of surveyID_full)
-    surveyID = substr(surveyID_full, 1, 7)
-  ) %>%
-  #remove the temporary intermediate column
+long_updated = edu_long |> 
+    mutate(
+      #extract the 2-digit year from the 8th and 9th characters of surveyID_full
+      surveyID_year = substr(surveyID_full, 8, 9),
+      
+      #convert the 2-digit year into numeric
+      year = as.numeric(surveyID_year),
+      # if 2 year digit is greater than 80 add 1900 + year, else 2000 + year
+      year = ifelse(year >= 80, 1900 + year, 2000 +year),
+      surveyID = substr(surveyID_full, 1, 7)
+    ) |> 
   select(-surveyID_year)
+
+
 
 #display the first 5 rows
 head(long_updated, 5)
@@ -169,7 +170,8 @@ extract_year_id <- function(data) {
   data |> 
     mutate(
       surveyID_year = substr(surveyID_full, 8, 9),
-      year = as.numeric(paste0("19", surveyID_year)),
+      year = as.numeric(surveyID_year),
+      year = ifelse(year >= 90, 1900 + year, 2000 +year),
       surveyID = substr(surveyID_full, 1, 7)
     ) |> 
   select(-surveyID_year)
@@ -315,8 +317,8 @@ edu01b$state |>
 
 ```{r}
 #call wrapper twice for the 2 data sets 
-edu01a <- my_wrapper("https://www4.stat.ncsu.edu/~online/datasets/EDU01a.csv")
-edu01b <- my_wrapper("https://www4.stat.ncsu.edu/~online/datasets/EDU01b.csv")
+edu01a_parsed <- my_wrapper("https://www4.stat.ncsu.edu/~online/datasets/EDU01a.csv")
+edu01b_parsed <- my_wrapper("https://www4.stat.ncsu.edu/~online/datasets/EDU01b.csv")
 
 combine_data <- function(data1, data2){
   combined_county <- bind_rows(data1$county, data2$county)
@@ -329,7 +331,7 @@ combine_data <- function(data1, data2){
 }
 
 #test and display using the combine function
-combine_data(edu01a, edu01b)
+combine_data(edu01a_parsed, edu01b_parsed)
 ```
 
 \newpage
