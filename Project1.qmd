@@ -283,7 +283,7 @@ plot.state <- function(data1, column = "enrollment"){
       x = year, 
       y = mean_value,
       color = division
-    )) +
+    )) + 
     geom_line(linewidth = 1) + #connect dots with a line
     geom_point() +
     labs(
@@ -291,7 +291,10 @@ plot.state <- function(data1, column = "enrollment"){
       x = "Year",
       y = paste0("Mean ", column),
       color = "Division"
-    )
+    ) +
+    guides(color = guide_legend(ncol = 2)) + 
+    theme_minimal() +
+    theme(legend.position = "bottom")
 }
 ```
 
@@ -324,14 +327,61 @@ plot.county <- function(data,
       y = get(column),
       color = area_name
     )) +
+    geom_line(linewidth = 1) + 
     geom_point() +
     labs(
       title = paste(toupper(direction), n, "counties in", state),
       x = "Year",
       y = column,
-      color = "County"
-    )
+      color = "County" 
+    ) +
+    guides(color = guide_legend(ncol = 2)) + 
+    theme_minimal() +
+    theme(legend.position = "bottom")
   return(data_plotted)
 }
 ```
+
+\newpage
+# Put it Together 
+
+## The 2 EDU01 Data Sets
+
+```{r}
+#run wrapper function twice for edu files
+edu01a <- my_wrapper("https://www4.stat.ncsu.edu/~online/datasets/EDU01a.csv")
+edu01b <- my_wrapper("https://www4.stat.ncsu.edu/~online/datasets/EDU01b.csv")
+
+#combine the two data sets
+edu_combined <- combine_data(edu01a, edu01b)
+
+#plot for state data frame
+plot(edu_combined$state)
+
+#plot for county data frame with the 4 different calls
+plot(edu_combined$county, 
+     state = "NC", direction = "top", n = 20)
+plot(edu_combined$county, 
+     state = "SC", direction = "bottom", n = 7)
+plot(edu_combined$county)  # uses defaults: NC, top, 5
+plot(edu_combined$county, 
+     state = "PA", direction = "top", n = 8)
+``` 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
