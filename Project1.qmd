@@ -337,10 +337,12 @@ combine_data(edu01a_parsed, edu01b_parsed)
 \newpage
 # Writing a Generic Function for Summarizing
 
+## plot.state function
+
 ```{r}
 plot.state <- function(data1, column = "enrollment"){
   data1 |> 
-    filter(division != "Error") |>
+    filter(division != "ERROR") |>
     group_by(division, year) |>
     summarise(mean_value = mean(get(column), na.rm = T)) |>
     ggplot(aes(
@@ -358,8 +360,59 @@ plot.state <- function(data1, column = "enrollment"){
     
 }
 
-plot.state(edu01a$state)
-
-
 
 ```
+
+
+```{r, echo=FALSE}
+plot.state(edu01a_parsed$state)
+```
+
+## plot.county
+
+```{r}
+plot.county <- function(data, column = "enrollment", state = "NC", direction = "top", n = 5){
+  
+  state_data = data |>
+    filter(state == state)
+  
+  data1 = state_data |> 
+    group_by(area_name) |>
+    summarise(mean_value = mean(get(column), na.rm = T))
+  
+  
+   if (direction == "top") {
+    data1 <- data1 |>
+      arrange(desc(mean_value))
+  } else {
+    data1 <- data1 |> 
+      arrange(mean_value)
+  }
+  
+  
+  areas <- data1 %>%
+    slice_head(n = n) %>%
+    pull(area_name)
+  
+  data_plotted = state_data |>
+    filter(area_name %in% areas) |>
+    ggplot(aes(
+      x = year, 
+      y = get(column),
+      color = area_name
+    )) +
+    geom_point() +
+    labs(
+      title = paste((direction), n, "counties in", state),
+      x = "Year",
+      y = column,
+      color = "County"
+    )
+    
+}
+
+
+plot(edu01a_parsed$county)
+
+```
+
